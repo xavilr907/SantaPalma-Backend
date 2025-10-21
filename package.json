@@ -1,9 +1,12 @@
 {
   "name": "santapalma-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "node backend/src/server.js",
+    "start": "node backend/src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
