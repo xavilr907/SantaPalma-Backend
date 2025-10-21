@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabaseClient.js'
+import supabase from '../config/supabaseClient.js'
 
 export const getPedidos = async (req, res) => {
   const { data, error } = await supabase
