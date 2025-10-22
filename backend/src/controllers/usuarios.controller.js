@@ -8,7 +8,7 @@ export const getUsuarios = async (req, res) => {
       id_usuario,
       nombre,
       correo,
-      contraseña_hash,
+      contrasena_hash,
       rol,
       fecha_registro
     `)
@@ -31,7 +31,7 @@ export const getUsuarioById = async (req, res) => {
       id_usuario,
       nombre,
       correo,
-      contraseña_hash,
+      contrasena_hash,
       rol,
       fecha_registro )
     `)
@@ -48,18 +48,18 @@ export const getUsuarioById = async (req, res) => {
 
 // Crear un nuevo usuario
 export const createUsuario = async (req, res) => {
-  const { nombre, correo, constraseña_hash, rol, fecha_registro } = req.body
+  const { nombre, correo, constrasena_hash, rol, fecha_registro } = req.body
 
   const { data, error } = await supabase
     .from('usuarios')
     .insert([
-      { nombre, correo, constraseña_hash, rol, fecha_registro }
+      { nombre, correo, constrasena_hash, rol, fecha_registro }
     ])
     .select(`
       id_usuario,
       nombre,
       correo,
-      contraseña_hash,
+      contrasena_hash,
       rol,
       fecha_registro
     `)
@@ -76,17 +76,17 @@ export const createUsuario = async (req, res) => {
 // Actualizar un usuario existente
 export const updateUsuario = async (req, res) => {
   const { id } = req.params
-  const { nombre, correo, constraseña_hash, rol, fecha_registro } = req.body
+  const { nombre, correo, constrasena_hash, rol, fecha_registro } = req.body
 
   const { data, error } = await supabase
     .from('usuarios')
-    .update({ nombre, correo, constraseña_hash, rol, fecha_registro })
+    .update({ nombre, correo, constrasena_hash, rol, fecha_registro })
     .eq('id_usuario', id)
     .select(`
       id_usuario,
       nombre,
       correo,
-      contraseña_hash,
+      contrasena_hash,
       rol,
       fecha_registro
     `)
