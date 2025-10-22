@@ -4,15 +4,18 @@ import {
   getUsuarioById,
   createUsuario,
   updateUsuario,
-  deleteUsuario
+  deleteUsuario,
+  loginUsuario
 } from '../controllers/usuarios.controller.js'
+import { authMiddleware } from '../middlewares/auth.middleware.js'
 
 const router = express.Router()
 
 router.get('/', getUsuarios)
 router.get('/:id', getUsuarioById)
 router.post('/', createUsuario)
-router.put('/:id', updateUsuario)
-router.delete('/:id', deleteUsuario)
+router.post('/login', loginUsuario)
+router.put('/:id', authMiddleware, updateUsuario)
+router.delete('/:id', authMiddleware, deleteUsuario)
 
 export default router

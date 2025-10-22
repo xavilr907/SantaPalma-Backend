@@ -1,4 +1,6 @@
 import supabase from '../config/supabaseClient.js'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 // Obtener todos los usuarios
 export const getUsuarios = async (req, res) => {
@@ -48,12 +50,19 @@ export const getUsuarioById = async (req, res) => {
 
 // Crear un nuevo usuario
 export const createUsuario = async (req, res) => {
-  const { nombre, correo, constrasena_hash, rol, fecha_registro } = req.body
+  const { nombre, correo, contrasena, rol, fecha_registro } = req.body
+
+  if (!contrasena) {
+    return res.status(400).json({ error: 'contrasena es requerida' })
+  }
+
+  // Hashear la contraseña antes de guardar
+  const contrasena_hash = await bcrypt.hash(contrasena, 10)
 
   const { data, error } = await supabase
     .from('usuarios')
     .insert([
-      { nombre, correo, constrasena_hash, rol, fecha_registro }
+      { nombre, correo, contrasena_hash, rol, fecha_registro }
     ])
     .select(`
       id_usuario,
@@ -76,11 +85,16 @@ export const createUsuario = async (req, res) => {
 // Actualizar un usuario existente
 export const updateUsuario = async (req, res) => {
   const { id } = req.params
-  const { nombre, correo, constrasena_hash, rol, fecha_registro } = req.body
+  let { nombre, correo, contrasena, contrasena_hash, rol, fecha_registro } = req.body
+
+  // Si envían contrasena en texto, hashearla
+  if (contrasena) {
+    contrasena_hash = await bcrypt.hash(contrasena, 10)
+  }
 
   const { data, error } = await supabase
     .from('usuarios')
-    .update({ nombre, correo, constrasena_hash, rol, fecha_registro })
+    .update({ nombre, correo, contrasena_hash, rol, fecha_registro })
     .eq('id_usuario', id)
     .select(`
       id_usuario,
@@ -114,4 +128,38 @@ export const deleteUsuario = async (req, res) => {
   }
 
   res.status(204).send()
+}
+
+// Login de usuario
+export const loginUsuario = async (req, res) => {
+  try {
+    const { correo, contrasena } = req.body
+    if (!correo || !contrasena) return res.status(400).json({ error: 'correo y contrasena son requeridos' })
+
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select(`id_usuario, nombre, correo, contrasena_hash, rol`)
+      .eq('correo', correo)
+      .single()
+
+    if (error || !data) {
+      return res.status(401).json({ error: 'Credenciales inválidas' })
+    }
+
+    const usuario = data
+
+    const match = await bcrypt.compare(contrasena, usuario.contrasena_hash)
+    if (!match) return res.status(401).json({ error: 'Credenciales inválidas' })
+
+    const payload = { id: usuario.id_usuario, correo: usuario.correo, rol: usuario.rol }
+    const token = jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: '8h' })
+
+    // No devolver el hash
+    delete usuario.contrasena_hash
+
+    res.status(200).json({ token, usuario })
+  } catch (err) {
+    console.error('Error en login:', err)
+    res.status(500).json({ error: 'Error interno al autenticar' })
+  }
 }
