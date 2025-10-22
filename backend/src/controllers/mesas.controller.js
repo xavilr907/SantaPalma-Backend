@@ -7,8 +7,8 @@ export const getMesas = async (req, res) => {
     .select(`
       id_mesa,
       codigo_qr,
-      estado_mesa,
-      ubicacion,
+      estado,
+      ubicacion
     `)
 
   if (error) {
@@ -28,8 +28,8 @@ export const getMesaById = async (req, res) => {
     .select(`
       id_mesa,
       codigo_qr,
-      estado_mesa,
-      ubicacion, )
+      estado,
+      ubicacion )
     `)
     .eq('id_mesa', id)
     .single()
@@ -44,17 +44,17 @@ export const getMesaById = async (req, res) => {
 
 // Crear una nueva mesa
 export const createMesa = async (req, res) => {
-  const { codigo_qr, estado_mesa, ubicacion } = req.body
+  const { codigo_qr, estado, ubicacion } = req.body
 
   const { data, error } = await supabase
     .from('mesas')
     .insert([
-      { codigo_qr, estado_mesa, ubicacion }
+      { codigo_qr, estado, ubicacion }
     ])
     .select(`
       id_mesa,
       codigo_qr,
-      estado_mesa,
+      estado,
       ubicacion
       
     `)
@@ -71,16 +71,16 @@ export const createMesa = async (req, res) => {
 // Actualizar una mesa existente
 export const updateMesa = async (req, res) => {
   const { id } = req.params
-  const { codigo_qr, estado_mesa, ubicacion } = req.body
+  const { codigo_qr, estado, ubicacion } = req.body
 
   const { data, error } = await supabase
     .from('mesas')
-    .update({ codigo_qr, estado_mesa, ubicacion })
+    .update({ codigo_qr, estado, ubicacion })
     .eq('id_mesa', id)
     .select(`
       id_mesa,
       codigo_qr,
-      estado_mesa,
+      estado,
       ubicacion
     `)
 
