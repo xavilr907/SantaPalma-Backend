@@ -1,0 +1,51 @@
+# ===================================================
+# 🟢 GITIGNORE — Backend Gastrobar Santa Palma
+# ===================================================
+
+# 🧩 Dependencias (se regeneran con npm install)
+node_modules/
+
+# 🔑 Variables de entorno (¡nunca subas claves ni URLs privadas!)
+.env
+.env.local
+.env.*.local
+
+# ⚙️ Archivos temporales de logs o depuración
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 🧠 Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# 🧪 Archivos de pruebas o cobertura
+coverage/
+*.test.js
+*.spec.js
+
+# 🧰 Compilaciones o builds (si llegas a usar TypeScript)
+dist/
+build/
+*.tsbuildinfo
+
+# ⚙️ Configuración de IDEs / editores
+.vscode/
+.idea/
+
+# 🚀 Archivos de despliegue o docker (si no son necesarios en el repo)
+docker-compose.override.yml
+*.pid
+*.seed
+
+# 📦 Archivos comprimidos o de respaldo
+*.zip
+*.tar.gz
+*.bak
+*.tmp
+
+# 🧾 Archivos del entorno local (por ejemplo, variables Supabase o Postgres locales)
+supabase/.branches
+supabase/.temp
+supabase/config.toml
